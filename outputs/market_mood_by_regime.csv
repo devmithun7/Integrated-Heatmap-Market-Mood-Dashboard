@@ -1,0 +1,7 @@
+,feature_mood,feature_mood,feature_mood,regime_mood,regime_mood,regime_mood,market_mood,market_mood,market_mood
+,mean,min,max,mean,min,max,mean,min,max
+regime_kmeans,,,,,,,,,
+calm,50.32,34.69,75.18,30.2,0.0,100.0,44.28,24.29,68.47
+high_volatility,36.16,6.66,60.29,48.05,0.0,100.0,39.73,12.16,65.99
+risk_off,24.85,0.0,39.47,37.5,0.0,100.0,28.64,7.5,51.52
+risk_on,67.12,43.36,86.4,58.78,0.0,100.0,64.62,43.85,75.48

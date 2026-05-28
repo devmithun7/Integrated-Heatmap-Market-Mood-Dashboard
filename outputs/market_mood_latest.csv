@@ -1,0 +1,2 @@
+date_utc,market_mood,feature_mood,regime_mood,mood_label,regime_kmeans,regime_gmm
+2025-12-18,32.97,47.1,0.0,cautious,calm,risk_off
