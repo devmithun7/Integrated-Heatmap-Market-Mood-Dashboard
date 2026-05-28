@@ -28,14 +28,34 @@ from compute_market_mood import (
     compute_market_mood,
 )
 
-DATA_DIR = HERE.parent
 OUT_DIR = HERE / "outputs"
+
+
+def find_data_file(name: str) -> Path:
+    """Locate a data CSV whether it sits next to the app, its parent, or a ./data folder.
+
+    Streamlit Cloud clones the repo so the app folder becomes the repo root, so the
+    files may live alongside dashboard.py rather than one level up (as in local dev).
+    """
+    candidates = [
+        HERE / name,
+        HERE / "data" / name,
+        HERE.parent / name,
+    ]
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    searched = "\n".join(f"  - {c}" for c in candidates)
+    raise FileNotFoundError(
+        f"Could not find '{name}'. Make sure it is committed to the repository.\n"
+        f"Looked in:\n{searched}"
+    )
 
 
 @st.cache_data
 def load_data():
-    market = pd.read_csv(DATA_DIR / "MARKET_1.CSV", parse_dates=["date_utc"])
-    metrics = pd.read_csv(DATA_DIR / "metric_engine_long.csv", parse_dates=["date_utc"])
+    market = pd.read_csv(find_data_file("MARKET_1.CSV"), parse_dates=["date_utc"])
+    metrics = pd.read_csv(find_data_file("metric_engine_long.csv"), parse_dates=["date_utc"])
     mood = compute_market_mood(market)
     btc = metrics[metrics["asset"] == "BTCUSD"][["date_utc", "close"]].drop_duplicates()
     return mood, metrics, btc
