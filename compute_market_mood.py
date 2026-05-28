@@ -15,9 +15,18 @@ import numpy as np
 import pandas as pd
 
 HERE = Path(__file__).resolve().parent
-DATA_DIR = HERE.parent
 OUT_DIR = HERE / "outputs"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def find_data_file(name: str) -> Path:
+    """Locate a data CSV next to this script, in ./data, or one level up."""
+    candidates = [HERE / name, HERE / "data" / name, HERE.parent / name]
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    searched = "\n".join(f"  - {c}" for c in candidates)
+    raise FileNotFoundError(f"Could not find '{name}'. Looked in:\n{searched}")
 
 POSITIVE_FEATURES = [
     "mean_return",
@@ -145,12 +154,8 @@ def build_asset_class_heatmap(metrics: pd.DataFrame, value_col: str, start_date:
 
 
 def main() -> None:
-    market_path = DATA_DIR / "MARKET_1.CSV"
-    metrics_path = DATA_DIR / "metric_engine_long.csv"
-    if not market_path.exists():
-        raise FileNotFoundError(f"Missing {market_path}")
-    if not metrics_path.exists():
-        raise FileNotFoundError(f"Missing {metrics_path}")
+    market_path = find_data_file("MARKET_1.CSV")
+    metrics_path = find_data_file("metric_engine_long.csv")
 
     labelled = pd.read_csv(market_path, parse_dates=["date_utc"])
     metrics = pd.read_csv(metrics_path, parse_dates=["date_utc"])
